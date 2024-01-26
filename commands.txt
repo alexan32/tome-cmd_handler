@@ -1,0 +1,25 @@
+counter create hp max=10
+counter list 
+counter search hp
+counter delete hp
+counter hp +10
+counter hp
+
+composite create acrobatics base=1d20 proficiency=prof modifier=dex bonus=0
+composite acrobatics proficiency=expert
+composite list
+composte search acrobatics
+composite acrobatics
+
+roll acrobatics
+roll list
+roll search acrobatics
+roll delete acrobatics
+roll acrobatics = 1d20 + dex + prof + 0
+
+func create dagger | roll attackroll; roll daggerdamage;
+func dagger
+func list
+func search dagger
+func delete dagger
+func create cast $spellname $slot | article $spellname; counter $slot -1
