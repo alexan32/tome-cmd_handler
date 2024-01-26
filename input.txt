@@ -1,0 +1,25 @@
+counter create hitpoints max=100 total=100
+counter create temphp max = 100 total=0
+counter list
+counter search temphp
+counter temphp max=30 total=0
+counter temphp +10
+counter temphp
+counter delete temphp
+
+composite create acrobatics base=1d20 modifier=dex proficiency=prof bonus=0
+composite create theives_tools base=1d20 modifier=dex proficiency=expert bonus=0
+composite list
+composite search acrobatics
+composite acrobatics proficiency=0
+composite acrobatics remove bonus
+composite acrobatics
+composite delete theives_tools
+
+roll acrobatics
+roll spark = 4d4kh3 + 1
+roll spark
+roll list
+roll search acrobatics
+roll search spark
+roll delete spark

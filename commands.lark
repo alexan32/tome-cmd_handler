@@ -1,6 +1,3 @@
-User
-can you improve the following lark logic?
-
 // RULES
 command_phrase: counter_rule | composite_rule | roll_rule  | article_rule | function_rule
 

@@ -1,7 +1,11 @@
+import json
 from lark import Lark, Token, Transformer
 from lark.exceptions import UnexpectedInput
-from execution import execute
-import json
+
+from commands.counter import counter
+from commands.composite import composite
+from commands.roll import roll
+from exceptions.exceptions import InvalidCommandException
 
 class TokenSimplifier(Transformer):
 
@@ -27,16 +31,35 @@ class CommandParser:
 
         return tree, tokens
 
+COMMAND_FUNCTIONS = {
+    "counter": counter,
+    "composite": composite,
+    "roll": roll,
+    "article": None,  # TODO: Add article cmd
+    "func": None,  # TODO: Add func cmd
+    "function": None  # TODO: Add function cmd
+}
+
+def execute(tokens: list, characterData: dict):
+    
+    command = tokens.pop(0)
+    cmd_function = COMMAND_FUNCTIONS.get(command)
+
+    if cmd_function:
+        return cmd_function(tokens, characterData)
+    else:
+        raise InvalidCommandException(command)
+
 
 if __name__ == "__main__":
 
-    with open("./commands4.lark") as f:
+    with open("./commands.lark") as f:
         grammar = f.read()
     
-    with open("./composite.txt") as f:
+    with open("./input.txt") as f:
         commands = [x.strip() for x in f.readlines() if len(x.strip()) != 0]
 
-    with open("./character.json") as f:
+    with open("./character-min.json") as f:
         characterData = json.load(f)
 
     parser = CommandParser(grammar, "command_phrase")
@@ -51,7 +74,7 @@ if __name__ == "__main__":
             print(f"TOKENS: {tokens}")
             # print(tree.pretty())
             result = execute(tokens, characterData)
-            print(f"RESPONSE: {result}")
+            print(f"RESPONSE:\n{result}")
 
         print("=" * 30)
 

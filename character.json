@@ -54,7 +54,7 @@
             "total": "2567"
         }
     },
-    "variables": {
+    "rolls": {
         "coinshot": "1d20 + level + dex + prof + strengthcheck + gold",
         "superioritydice": "1d8",
         "fighter_dice": "1d10",
@@ -67,9 +67,7 @@
         "constitution": "14",
         "wisdom": "8",
         "charisma": "12",
-        "intelligence": "10"
-    },
-    "formulas": {
+        "intelligence": "10",
         "a": "b",
         "b": "a",
         "ac": "armorclass",
@@ -92,85 +90,85 @@
             "base": "1d20",
             "modifier": "cha",
             "proficiency": "prof",
-            "bonus": ""
+            "bonus": "0"
         },
         "strengthcheck": {
             "base": "1d20",
             "modifier": "str",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "4",
+            "bonus": "1"
         },
         "strengthsave": {
             "base": "1d20",
             "modifier": "str",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "4",
+            "bonus": "1"
         },
         "dexteritycheck": {
             "base": "1d20",
             "modifier": "dex",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "dexteritysave": {
             "base": "1d20",
             "modifier": "dex",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "constitutioncheck": {
             "base": "1d20",
             "modifier": "dex",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "constitutionsave": {
             "base": "1d20",
             "modifier": "dex",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "wisdomcheck": {
             "base": "1d20",
             "modifier": "wis",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "wisdomsave": {
             "base": "1d20",
             "modifier": "wis",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "intelligencecheck": {
             "base": "1d20",
             "modifier": "int",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "intelligencesave": {
             "base": "1d20",
             "modifier": "int",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "charismacheck": {
             "base": "1d20",
             "modifier": "cha",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "charismasave": {
             "base": "1d20",
             "modifier": "cha",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "athletics": {
             "base": "1d20",
             "modifier": "str",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "acrobatics": {
             "base": "1d20",
@@ -181,104 +179,104 @@
         "sleightofhand": {
             "base": "1d20",
             "modifier": "dex",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "stealth": {
             "base": "1d20",
             "modifier": "dex",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "theivestools": {
             "base": "1d20",
             "modifier": "dex",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "arcana": {
             "base": "1d20",
             "modifier": "int",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "history": {
             "base": "1d20",
             "modifier": "int",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "investigation": {
             "base": "1d20",
             "modifier": "int",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "nature": {
             "base": "1d20",
             "modifier": "int",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "religion": {
             "base": "1d20",
             "modifier": "int",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "animalhandling": {
             "base": "1d20",
             "modifier": "wis",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "insight": {
             "base": "1d20",
             "modifier": "wis",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "medicine": {
             "base": "1d20",
             "modifier": "wis",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "perception": {
             "base": "1d20",
             "modifier": "wis",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "survival": {
             "base": "1d20",
             "modifier": "wis",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "deception": {
             "base": "1d20",
             "modifier": "cha",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "intimidation": {
             "base": "1d20",
             "modifier": "cha",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "performance": {
             "base": "1d20",
             "modifier": "cha",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         },
         "persuasion": {
             "base": "1d20",
             "modifier": "cha",
-            "proficiency": "",
-            "bonus": ""
+            "proficiency": "0",
+            "bonus": "0"
         }
     }
 }
