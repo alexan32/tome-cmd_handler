@@ -5,6 +5,7 @@ from lark.exceptions import UnexpectedInput
 from commands.counter import counter
 from commands.composite import composite
 from commands.roll import roll
+from commands.function import function
 from exceptions.exceptions import InvalidCommandException
 
 class TokenSimplifier(Transformer):
@@ -31,13 +32,18 @@ class CommandParser:
 
         return tree, tokens
 
+with open("./commands.lark") as f:
+    grammar = f.read()
+
+PARSER = CommandParser(grammar, "command_phrase")
+
 COMMAND_FUNCTIONS = {
     "counter": counter,
     "composite": composite,
     "roll": roll,
     "article": None,  # TODO: Add article cmd
-    "func": None,  # TODO: Add func cmd
-    "function": None  # TODO: Add function cmd
+    "func": function,  # TODO: Add func cmd
+    "function": function  # TODO: Add function cmd
 }
 
 def execute(tokens: list, characterData: dict):
@@ -53,21 +59,16 @@ def execute(tokens: list, characterData: dict):
 
 if __name__ == "__main__":
 
-    with open("./commands.lark") as f:
-        grammar = f.read()
-    
     with open("./input.txt") as f:
         commands = [x.strip() for x in f.readlines() if len(x.strip()) != 0]
 
-    with open("./character2.json") as f:
+    with open("./character-min.json") as f:
         characterData = json.load(f)
-
-    parser = CommandParser(grammar, "command_phrase")
 
     for command in commands:
         print(f"INPUT: {command}")
         try:
-            tree, tokens = parser.parse(command)
+            tree, tokens = PARSER.parse(command)
         except Exception as e:
             print("Failed to parse input. Use !help for a list of valid commands.")
         else:
@@ -79,4 +80,4 @@ if __name__ == "__main__":
         print("=" * 30)
 
     print("DONE!")
-    # print(json.dumps(characterData, indent=4))
+    print(json.dumps(characterData, indent=4))

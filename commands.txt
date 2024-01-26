@@ -1,21 +1,36 @@
-counter create hp max=10
-counter list 
-counter search hp
-counter delete hp
-counter hp +10
-counter hp
+counter create epsilon max=100 total=100
+counter list
+counter search epsilon
+counter epsilon max=30 total=0
+counter epsilon +10
+counter epsilon
+counter epsilon max
+counter epsilon min
+counter delete epsilon
 
-composite create acrobatics base=1d20 proficiency=prof modifier=dex bonus=0
-composite acrobatics proficiency=expert
+composite create painters_tools base=1d20 modifier=dex proficiency=prof bonus=0
+composite create theives_tools base=1d20 modifier=dex proficiency=expert bonus=0
 composite list
-composte search acrobatics
-composite acrobatics
+composite list 2
+composite list 3
+composite search painters_tools
+composite painters_tools proficiency=0
+composite painters_tools remove bonus
+composite painters_tools
+composite delete theives_tools
 
-roll acrobatics
+roll painters_tools
+roll 1d20 + (2, 1d4)kh1
+roll spark = 4d4kh3 + 1
+roll spark
+roll search painters_tools
+roll intimidation
+roll proficient
+roll level
 roll list
-roll search acrobatics
-roll delete acrobatics
-roll acrobatics = 1d20 + dex + prof + 0
+roll list 2
+roll list 3
+roll list 4
 
 func create dagger | roll attackroll; roll daggerdamage;
 func dagger

@@ -16,7 +16,7 @@ class InvalidArgumentException(CommandHandlerException):
 
 class AlreadyExistsException(CommandHandlerException):
     def __init__(self, key):
-        super().__init__(f"A composite, counter, or roll with name \"{key}\" already exists.")
+        super().__init__(f"A value of this type with name \"{key}\" already exists.")
 
 class NotFoundException(CommandHandlerException):
     def __init__(self, key, type):
