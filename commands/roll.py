@@ -1,6 +1,6 @@
 import re
 import json
-from exceptions.exceptions import *
+from commands.exceptions import *
 import commands.utils as utils
 
 def roll(tokens: list, characterData:dict):

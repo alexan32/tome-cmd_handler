@@ -1,6 +1,6 @@
 import re
 import json
-from exceptions.exceptions import *
+from commands.exceptions import *
 import commands.utils as utils
 
 
@@ -39,20 +39,43 @@ def functionCreate(tokens:list, characterData:dict):
         else:
             statements += "; "
     
-    saveString = (" ".join(args) + " | " + statements).strip()
+    saveString = (" ".join(args) + " |" + statements).strip()
 
     characterData["functions"][funcName] = saveString
 
     return utils.buildCommandResponse(f"Created function \"{funcName}\"")
 
 def functionList(tokens:list, characterData:dict):
-    pass
+    index = 0
+    if len(tokens) > 0 and re.fullmatch(r"\d+", tokens[0]):
+        index = int(tokens[0])
+
+    return utils.buildCommandResponse(utils.paginateDict(characterData["functions"], index, spacing=0, minspace=1, spaceCharacter=" "))
+
 
 def functionSearch(tokens:list, characterData:dict):
-    pass
+    if len(tokens) == 0:
+        raise MissingArgumentException("Expected a search term.")
+    
+    searchResults = utils.search(tokens[0], list(characterData["functions"].keys()))
+    if len(searchResults) == 0:
+        return utils.buildCommandResponse(f"No results found for {tokens[0]}")
+    else:
+        message = f"Search results for \"{tokens[0]}\":\n"
+        for x in searchResults:
+            message += f"{x}\n"
+        return utils.buildCommandResponse(message)
 
 def functionDelete(tokens:list, characterData:dict):
-    pass
+    if len(tokens) == 0:
+        raise MissingArgumentException("Expected the name of a function to delete.")
+
+    functionName = tokens[0]
+    if functionName in characterData["functions"]:
+        del characterData["functions"][functionName]
+        return utils.buildCommandResponse(f"{functionName} successfully deleted.")
+    else:
+        raise NotFoundException(functionName, "functions")
 
 def functionSubject(funcName:str, tokens:list, characterData:dict):
     
@@ -67,9 +90,9 @@ def functionSubject(funcName:str, tokens:list, characterData:dict):
     # match current input with expected args
     argsDict = {}
     for arg in args:
-        nextToken = tokens.pop(0)
-        if nextToken == "|":
+        if len(tokens) == 0:
             raise MissingArgumentException(f"function \"{funcName}\" expects the following args: {args}")
+        nextToken = tokens.pop(0)
         argsDict[arg] = nextToken
 
     # perform string replacement on commandstring

@@ -1,6 +1,6 @@
 import re
 import json
-from exceptions.exceptions import *
+from commands.exceptions import *
 import commands.utils as utils
 
 
@@ -46,7 +46,7 @@ def counterList(tokens: list, characterData: dict):
         index = int(tokens[0])
 
     transformerFunc = lambda key, dictionary: utils.counterToString(dictionary[key])
-    return utils.buildCommandResponse(utils.paginateDict(characterData["counters"], index, transformerFunc))
+    return utils.buildCommandResponse(utils.paginateDict(characterData["counters"], index, transformerFunction=transformerFunc))
 
 def counterSearch(tokens: list, characterData: dict):
     if len(tokens) == 0:

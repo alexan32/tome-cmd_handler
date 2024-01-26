@@ -6,7 +6,7 @@ from commands.counter import counter
 from commands.composite import composite
 from commands.roll import roll
 from commands.function import function
-from exceptions.exceptions import InvalidCommandException, RecursiveDepthExceeded
+from commands.exceptions import CommandHandlerException, InvalidCommandException, RecursiveDepthExceeded
 
 class TokenSimplifier(Transformer):
 
@@ -52,29 +52,35 @@ def execute(commandPhrase:str, characterData: dict, depth:int=0):
     
     messages = []
 
-    _, tokens = PARSER.parse(commandPhrase)
-    command = tokens.pop(0)
-    cmd_function = COMMAND_FUNCTIONS.get(command)
-
-    if cmd_function:
-        output = cmd_function(tokens, characterData)
-        # print(f"MESSAGE: \n{output[0]}")
-        messages.append(output[0])
+    try:
+        _, tokens = PARSER.parse(commandPhrase)
+        command = tokens.pop(0)
+        cmd_function = COMMAND_FUNCTIONS.get(command)
         
-        # function commands may return a list of other commands to execute
-        for _commandPhrase in output[1]:
+        if cmd_function:
+            output = cmd_function(tokens, characterData)
+            # print(f"MESSAGE: \n{output[0]}")
+            messages.append(output[0])
+            
+            # function commands may return a list of other commands to execute
+            for _commandPhrase in output[1]:
 
-            # check for maximum depth
-            if depth > MAXIMUM_DEPTH:
-                raise RecursiveDepthExceeded(MAXIMUM_DEPTH)
+                # check for maximum depth
+                if depth > MAXIMUM_DEPTH:
+                    raise RecursiveDepthExceeded(MAXIMUM_DEPTH)
 
-            # collect message results from execution
-            newMessages = execute(_commandPhrase, characterData, depth+1)
-            messages.extend(newMessages)
-        return messages
-    else:
-        raise InvalidCommandException(command)
+                # collect message results from execution
+                newMessages = execute(_commandPhrase, characterData, depth+1)
+                messages.extend(newMessages)
+            return messages
+        else:
+            raise InvalidCommandException(command)
+    
+    except CommandHandlerException as e:
+        return [str(e)]
 
+    except UnexpectedInput as e:
+        return ["Command syntax was not recognized. Review the help menu for assistance."]
 
 if __name__ == "__main__":
 
@@ -91,6 +97,4 @@ if __name__ == "__main__":
         for x in results:
             print(x)
         print("=" * 30)
-
-    print("DONE!")
-    # print(json.dumps(characterData, indent=4))
+    print(json.dumps(characterData, indent=4))

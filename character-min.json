@@ -6,5 +6,6 @@
     "articles": {},
     "counters": {},
     "rolls": {},
-    "composites": {}
+    "composites": {},
+    "saveFlag": false
 }

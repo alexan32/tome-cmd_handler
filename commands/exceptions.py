@@ -1,14 +1,12 @@
 from commands import utils
 
-commands = ["counter", "composite", "roll", "article", "func"]
-
 class CommandHandlerException(Exception):
     """Parent exception for custom command handler exceptions."""
     pass
 
 class InvalidCommandException(CommandHandlerException):
     def __init__(self, badCommand):
-        super().__init__(f"Received an invalid command \"{badCommand}\". Expected one of {commands}")
+        super().__init__(f"Received an invalid command \"{badCommand}\". Expected one of {utils.COMMAND_WORDS}")
 
 class InvalidArgumentException(CommandHandlerException):
     def __init__(self, badArg, expected):
@@ -27,7 +25,7 @@ class MissingArgumentException(CommandHandlerException):
         super().__init__(f"Command was missing an expected argument. {expected}")
 
 class ReservewordException(CommandHandlerException):
-    def __init__(self, expected):
+    def __init__(self):
         super().__init__(f"The following are reserve words and cannot be used to name resources: {utils.RESERVE_WORDS}")
 
 class RecursiveDepthExceeded(CommandHandlerException):

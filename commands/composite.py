@@ -1,6 +1,6 @@
 import re
 import json
-from exceptions.exceptions import *
+from commands.exceptions import *
 import commands.utils as utils
 
 def composite(tokens: list, characterData: dict):
@@ -43,7 +43,7 @@ def compositeList(tokens: list, characterData: dict):
         index = int(tokens[0])
 
     return utils.buildCommandResponse(
-        utils.paginateDict(characterData["composites"], index, compositeTransformer)
+        utils.paginateDict(characterData["composites"], index, transformerFunction=compositeTransformer)
     )
 
 

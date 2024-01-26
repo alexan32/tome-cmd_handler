@@ -42,3 +42,7 @@ func create cast $slot | counter $slot -1; roll spellattack; roll spellsave;
 func create dagger | roll attackroll; roll daggerdamage;
 func cast first
 func dagger
+
+function list
+function list 2
+function search dagger

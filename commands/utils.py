@@ -100,7 +100,7 @@ def search(searchTerm: str, searchData: list, maxResults=10):
 def basicTransform(key: str, dictionary: dict):
     return dictionary[key]
 
-def paginateDict(dictionary: dict, index: int, transformerFunction=basicTransform):
+def paginateDict(dictionary: dict, index: int, transformerFunction=basicTransform, spacing:int=SPACING, spaceCharacter:str=".", minspace:int=0):
     keys = sorted(list(dictionary.keys()))
     pages = []
     message = ""
@@ -108,7 +108,7 @@ def paginateDict(dictionary: dict, index: int, transformerFunction=basicTransfor
 
     for key in keys:
         # Create a line with key and transformed value
-        line = f"{key}".ljust(SPACING, ".") + f"{transformerFunction(key, dictionary)}\n"
+        line = f"{key}{spaceCharacter*minspace}".ljust(spacing, spaceCharacter) + f"{transformerFunction(key, dictionary)}\n"
         counter += 1
 
         # Check if adding the line exceeds the page limits
