@@ -1,81 +1,59 @@
 {
     "characterId": "UUID",
     "participant": "UUID",
-    "meta": {
-        "first": "john",
-        "last": "snow",
-        "race": "human",
-        "fighter_subclass": "battle master",
-        "sorcerer_subclass": "divine soul"
+    "meta": {},
+    "functions": {
+        "longrest": "counter hp max; counter temphp min;"
     },
-    "routines": {
-        "cast": "$spell $counter | article $spell; counter $counter -1",
-        "manuever": "$manuever | article $manuever; counter manuever -1",
-        "compile": "formula compile; composite compile",
-        "longrest": "counter hp max; counter temphp min; counter fighter_hitdice max; counter sorcerer_hitdice max; counter manuevers max; counter 1rst max"
-    },
-    "articles": {
-        "disarmingattack": "UUID"
-    },
+    "articles": {},
     "counters": {               
         "hp": {
-            "max": "64",
+            "max": "10",
             "min": "0",
-            "total": "64"
+            "total": "10"
         },
         "temphp": {
-            "max": "9999",
+            "max": "999",
             "min": "0",
-            "total": "16"
+            "total": "0"
         },
-        "figher_hitdice": {
-            "max": "6",
-            "min": "0",
-            "total": "6"
-        },
-        "sorcerer_hitdice": {
-            "max": "1",
-            "min": "0",
-            "total": "1"
-        },
-        "manuevers": {
-            "max": "4",
-            "min": "0",
-            "total": "4"
-        },
-        "1rst": {
-            "max": "2",
-            "min": "0",
-            "total": "2"
-        },
-        "gold": {
-            "max": "999999",
-            "min": "0",
-            "total": "2567"
-        },
-        "strength_score": {
+        "strength_attribute": {
             "max": "20",
             "min": "0",
-            "total": "14"
+            "total": "8"
+        },
+        "dexterity_attribute": {
+            "max": "20",
+            "min": "0",
+            "total": "8"
+        },
+        "constitution_attribute": {
+            "max": "20",
+            "min": "0",
+            "total": "8"
+        },
+        "wisdom_attribute": {
+            "max": "20",
+            "min": "0",
+            "total": "8"
+        },
+        "intelligence_attribute": {
+            "max": "20",
+            "min": "0",
+            "total": "8"
+        },
+        "charisma_attribute": {
+            "max": "20",
+            "min": "0",
+            "total": "8"
+        },
+        "level": {
+            "max": "20",
+            "min": "0",
+            "total": "1"
         }
     },
     "rolls": {
-        "coinshot": "1d20 + level + dex + prof + strengthcheck + gold",
-        "superioritydice": "1d8",
-        "fighter_dice": "1d10",
-        "sorcerer_dice": "1d6",
-        "level": "6",
-        "fighter_level": "5",
-        "sorcerer_level": "1",
-        "strength": "18",
-        "dexterity": "14",
-        "constitution": "14",
-        "wisdom": "8",
-        "charisma": "12",
-        "intelligence": "10",
-        "a": "b",
-        "b": "a",
-        "ac": "armorclass",
         "str": "(strength - 10) / 2",
         "dex": "(dexterity - 10) / 2",
         "con": "(constitution - 10) / 2",
@@ -85,85 +63,94 @@
         "proficiencybonus": "((level - 1) / 4) + 2",
         "proficient": "proficiencybonus",
         "expert": "proficiencybonus * 2",
-        "armorclass": "12 + (dex, 2)kl1",
-        "initiative": "dex",
-        "prof": "proficient",
-        "sorcerer_spellsave": "8 + prof + cha"
+        "armorclass": "10 + dex",
+        "prof": "proficient"
     },
     "composites": {
-        "sorcerer_spellattack": {
+        "initiative": {
             "base": "1d20",
-            "modifier": "cha",
-            "proficiency": "prof",
+            "modifier": "dex",
             "bonus": "0"
         },
-        "strengthcheck": {
+        "strength": {
+            "attribute": "strength_attribute",
+            "bonus": "0"
+        },
+        "dexterity": {
+            "attribute": "dexterity_attribute",
+            "bonus": "0"
+        },
+        "constitution": {
+            "attribute": "constitution_attribute",
+            "bonus": "0"
+        },
+        "wisdom": {
+            "attribute": "wisdom_attribute",
+            "bonus": "0"
+        },
+        "intelligence": {
+            "attribute": "intelligence_attribute",
+            "bonus": "0"
+        },
+        "charisma": {
+            "attribute": "charisma_attribute",
+            "bonus": "0"
+        },
+        "strength_check": {
+            "base": "1d20",
+            "modifier": "str"
+        },
+        "strength_save": {
             "base": "1d20",
             "modifier": "str",
-            "proficiency": "4",
-            "bonus": "1"
+            "proficiency": "0",
+            "bonus": "0"
         },
-        "strengthsave": {
+        "dexterity_check": {
             "base": "1d20",
-            "modifier": "str",
-            "proficiency": "4",
-            "bonus": "1"
+            "modifier": "dex"
         },
-        "dexteritycheck": {
+        "dexterity_save": {
             "base": "1d20",
             "modifier": "dex",
             "proficiency": "0",
             "bonus": "0"
         },
-        "dexteritysave": {
+        "constitution_check": {
+            "base": "1d20",
+            "modifier": "dex"
+        },
+        "constitution_save": {
             "base": "1d20",
             "modifier": "dex",
             "proficiency": "0",
             "bonus": "0"
         },
-        "constitutioncheck": {
+        "wisdom_check": {
             "base": "1d20",
-            "modifier": "dex",
-            "proficiency": "0",
-            "bonus": "0"
+            "modifier": "wis"
         },
-        "constitutionsave": {
-            "base": "1d20",
-            "modifier": "dex",
-            "proficiency": "0",
-            "bonus": "0"
-        },
-        "wisdomcheck": {
+        "wisdom_save": {
             "base": "1d20",
             "modifier": "wis",
             "proficiency": "0",
             "bonus": "0"
         },
-        "wisdomsave": {
+        "intelligence_check": {
             "base": "1d20",
-            "modifier": "wis",
-            "proficiency": "0",
-            "bonus": "0"
+            "modifier": "int"
         },
-        "intelligencecheck": {
+        "intelligence_save": {
             "base": "1d20",
             "modifier": "int",
             "proficiency": "0",
             "bonus": "0"
         },
-        "intelligencesave": {
+        "charisma_check": {
             "base": "1d20",
-            "modifier": "int",
-            "proficiency": "0",
-            "bonus": "0"
+            "modifier": "cha"
         },
-        "charismacheck": {
-            "base": "1d20",
-            "modifier": "cha",
-            "proficiency": "0",
-            "bonus": "0"
-        },
-        "charismasave": {
+        "charisma_save": {
             "base": "1d20",
             "modifier": "cha",
             "proficiency": "0",
@@ -181,7 +168,7 @@
             "proficiency": "prof",
             "bonus": "1"
         },
-        "sleightofhand": {
+        "sleight_of_hand": {
             "base": "1d20",
             "modifier": "dex",
             "proficiency": "0",
@@ -229,7 +216,7 @@
             "proficiency": "0",
             "bonus": "0"
         },
-        "animalhandling": {
+        "animal_handling": {
             "base": "1d20",
             "modifier": "wis",
             "proficiency": "0",

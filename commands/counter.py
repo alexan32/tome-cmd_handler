@@ -21,8 +21,8 @@ def counter(tokens: list, characterData: dict):
 def counterCreate(tokens: list, characterData: dict):
     counterName = tokens.pop(0)
 
-    if counterName in characterData["counters"]:
-        raise AlreadyExistsException(counterName, "counter")
+    if utils.rollAlreadyExists(counterName, characterData):
+        raise AlreadyExistsException(counterName)
 
     newCounter = {
         "max": "10",
@@ -45,7 +45,7 @@ def counterList(tokens: list, characterData: dict):
     if len(tokens) > 0 and re.fullmatch(r"\d+", tokens[0]):
         index = int(tokens[0])
 
-    transformerFunc = lambda key, dictionary: f"{dictionary[key]['total']} / {dictionary[key]['max']}"
+    transformerFunc = lambda key, dictionary: utils.counterToString(dictionary[key])
 
     return utils.paginateDict(characterData["counters"], index, transformerFunc)
 
@@ -80,6 +80,16 @@ def counterSubject(counterName: str, tokens: list, characterData: dict):
 
     # no operation, just show total/max
     if len(tokens) == 0:
+        return f"{counterName}: {counter['total']}/{counter['max']}" 
+
+    # max
+    elif tokens[0] == "max":
+        counter["total"] = counter["max"]
+        return f"{counterName}: {counter['total']}/{counter['max']}" 
+    
+    # min
+    elif tokens[0] == "min":
+        counter["total"] = counter["min"]
         return f"{counterName}: {counter['total']}/{counter['max']}" 
 
     # increment operation

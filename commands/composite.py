@@ -4,16 +4,6 @@ from exceptions.exceptions import *
 import commands.utils as utils
 
 def composite(tokens: list, characterData: dict):
-    """
-    Main function for handling composite commands.
-
-    Parameters:
-    - tokens (list): List of tokens representing the command.
-    - characterData (dict): Dictionary containing character data.
-
-    Returns:
-    - str: Result of the composite command.
-    """
     op = tokens.pop(0)
 
     if op == "create":
@@ -28,20 +18,10 @@ def composite(tokens: list, characterData: dict):
         return compositeSubject(op, tokens, characterData)
 
 def compositeCreate(tokens: list, characterData: dict):
-    """
-    Create a new composite.
-
-    Parameters:
-    - tokens (list): List of tokens representing the command.
-    - characterData (dict): Dictionary containing character data.
-
-    Returns:
-    - str: Result of the composite create command.
-    """
     compositeName = tokens.pop(0)
 
-    if compositeName in characterData["composites"]:
-        raise AlreadyExistsException(compositeName, "composite")
+    if utils.rollAlreadyExists(compositeName, characterData):
+        raise AlreadyExistsException(compositeName)
 
     if len(tokens) == 0:
         raise MissingArgumentException("Expected something like \"base=1d20\", \"proficiency=expert\", or \"bonus=2\"")
@@ -58,16 +38,6 @@ def compositeTransformer(key:str, composites:dict):
     return utils.compositeToString(target)
 
 def compositeList(tokens: list, characterData: dict):
-    """
-    List composites.
-
-    Parameters:
-    - tokens (list): List of tokens representing the command.
-    - characterData (dict): Dictionary containing character data.
-
-    Returns:
-    - str: Result of the composite list command.
-    """
     index = 0
     if len(tokens) > 0 and re.fullmatch(r"\d+", tokens[0]):
         index = int(tokens[0])
@@ -76,16 +46,6 @@ def compositeList(tokens: list, characterData: dict):
 
 
 def compositeSearch(tokens: list, characterData: dict):
-    """
-    Search for composites.
-
-    Parameters:
-    - tokens (list): List of tokens representing the command.
-    - characterData (dict): Dictionary containing character data.
-
-    Returns:
-    - None: Placeholder for future implementation.
-    """
     if len(tokens) == 0:
         raise MissingArgumentException("Expected a search term.")
 
@@ -99,16 +59,6 @@ def compositeSearch(tokens: list, characterData: dict):
         return message
 
 def compositeDelete(tokens: list, characterData: dict):
-    """
-    Delete a composite.
-
-    Parameters:
-    - tokens (list): List of tokens representing the command.
-    - characterData (dict): Dictionary containing character data.
-
-    Returns:
-    - str: Result of the composite delete command.
-    """
     if len(tokens) == 0:
         raise MissingArgumentException("Expected the name of a composite to delete.")
 
@@ -120,17 +70,6 @@ def compositeDelete(tokens: list, characterData: dict):
         raise NotFoundException(compositeName, "composite")
 
 def compositeSubject(compositeName: str, tokens: list, characterData: dict):
-    """
-    Perform operations on a specific composite.
-
-    Parameters:
-    - compositeName (str): Name of the composite.
-    - tokens (list): List of tokens representing the command.
-    - characterData (dict): Dictionary containing character data.
-
-    Returns:
-    - str: Result of the composite subject command.
-    """
     if not compositeName in characterData["composites"]:
         raise NotFoundException(compositeName, "composite")
     composite = characterData["composites"][compositeName]
@@ -153,17 +92,6 @@ def compositeSubject(compositeName: str, tokens: list, characterData: dict):
         raise InvalidArgumentException(tokens[0], f"Expected an increment (+1, -12, etc) or a set argument (max=100). Received {tokens[0]}")
 
 def compositeRemove(compositeName: str, composite: dict, tokens: list):
-    """
-    Remove a key from the composite.
-
-    Parameters:
-    - compositeName (str): Name of the composite.
-    - composite (dict): Dictionary representing the composite.
-    - tokens (list): List of tokens representing the command.
-
-    Returns:
-    - str: Result of the composite remove command.
-    """
     key = tokens[0]
     if key in composite:
         del composite[key]

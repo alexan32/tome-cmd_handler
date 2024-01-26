@@ -59,7 +59,7 @@ if __name__ == "__main__":
     with open("./input.txt") as f:
         commands = [x.strip() for x in f.readlines() if len(x.strip()) != 0]
 
-    with open("./character-min.json") as f:
+    with open("./character2.json") as f:
         characterData = json.load(f)
 
     parser = CommandParser(grammar, "command_phrase")
@@ -79,4 +79,4 @@ if __name__ == "__main__":
         print("=" * 30)
 
     print("DONE!")
-    print(json.dumps(characterData, indent=4))
+    # print(json.dumps(characterData, indent=4))

@@ -37,6 +37,16 @@ RESERVE_WORDS =  [*OPERATION_WORDS, *COMMAND_WORDS]
 MAX_DEPTH = 10
 
 
+def rollKeys(characterData:dict):
+    return [
+        *list(characterData["rolls"].keys()),
+        *list(characterData["counters"].keys()),
+        *list(characterData["composites"].keys())
+    ]
+
+def rollAlreadyExists(key: str, characterData:dict):
+    return key in rollKeys(characterData)
+
 def findRoll(key:str, characterData:dict):
     if key in characterData["rolls"]:
         return characterData["rolls"][key]
@@ -52,6 +62,21 @@ def compositeToString(composite: dict) -> str:
     values = map(lambda key : composite[key], keys)
     rollString = " + ".join(values).lower()
     return rollString
+
+def counterToString(counter:dict) -> str:
+    return f"{counter['total']} / {counter['max']}"
+
+
+def buildCombinedRollDictionary(characterData:dict, compositeMarker="`"):
+    data = {}
+    for key in characterData["composites"]:
+        data[key] = compositeMarker + compositeToString(characterData["composites"][key])
+    for key in characterData["counters"]:
+        data[key] = counterToString(characterData["counters"][key])
+    return {
+        **data,
+        **characterData["rolls"]
+    }
 
 
 def search(searchTerm: str, searchData: list, maxResults=10):
@@ -74,7 +99,6 @@ def search(searchTerm: str, searchData: list, maxResults=10):
 
 def basicTransform(key: str, dictionary: dict):
     return dictionary[key]
-
 
 def paginateDict(dictionary: dict, index: int, transformerFunction=basicTransform):
     keys = sorted(list(dictionary.keys()))
@@ -100,6 +124,9 @@ def paginateDict(dictionary: dict, index: int, transformerFunction=basicTransfor
         pages.append(message)
 
     # Ensure the index is within bounds
+    index -= 1
+    if index < 0:
+        index = 0
     if index > len(pages) - 1:
         index = 0
 
@@ -162,6 +189,7 @@ def evaluateRollString(rollString:str, characterData:dict, depth:int=0, logging=
     misses = []
     for match in matches:
         replaceValue = findRoll(match, characterData)
+        _print(f"FIND ROLL FOR {match} ==> {replaceValue}")
         if replaceValue:
             if not replaceValue.isdigit():
                 if depth == MAX_DEPTH:

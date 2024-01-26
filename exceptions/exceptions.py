@@ -1,3 +1,5 @@
+from commands import utils
+
 commands = ["counter", "composite", "roll", "article", "func"]
 
 class CommandHandlerException(Exception):
@@ -13,8 +15,8 @@ class InvalidArgumentException(CommandHandlerException):
         super().__init__(f"Received an invalid argument \"{badArg}\". {expected}")
 
 class AlreadyExistsException(CommandHandlerException):
-    def __init__(self, key, type):
-        super().__init__(f"A {type} with a key of {key} already exists.")
+    def __init__(self, key):
+        super().__init__(f"A composite, counter, or roll with name \"{key}\" already exists.")
 
 class NotFoundException(CommandHandlerException):
     def __init__(self, key, type):
@@ -23,3 +25,8 @@ class NotFoundException(CommandHandlerException):
 class MissingArgumentException(CommandHandlerException):
     def __init__(self, expected):
         super().__init__(f"Command was missing an expected argument. {expected}")
+
+
+class ReservewordException(CommandHandlerException):
+    def __init__(self, expected):
+        super().__init__(f"The following are reserve words and cannot be used to name resources: {utils.RESERVE_WORDS}")
