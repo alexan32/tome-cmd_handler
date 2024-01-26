@@ -43,7 +43,7 @@ def functionCreate(tokens:list, characterData:dict):
 
     characterData["functions"][funcName] = saveString
 
-    return f"Created function \"{funcName}\""
+    return utils.buildCommandResponse(f"Created function \"{funcName}\"")
 
 def functionList(tokens:list, characterData:dict):
     pass
@@ -54,5 +54,30 @@ def functionSearch(tokens:list, characterData:dict):
 def functionDelete(tokens:list, characterData:dict):
     pass
 
-def functionSubject(tokens:list, characterData:dict):
-    pass
+def functionSubject(funcName:str, tokens:list, characterData:dict):
+    
+    if not funcName in characterData["functions"]:
+        raise NotFoundException(funcName, "function")
+    
+    # split saved function into args and commands
+    funcString = characterData["functions"][funcName]
+    argString, commandString = funcString.split("|")
+    args = [x for x in argString.split(" ") if len(x) != 0]
+
+    # match current input with expected args
+    argsDict = {}
+    for arg in args:
+        nextToken = tokens.pop(0)
+        if nextToken == "|":
+            raise MissingArgumentException(f"function \"{funcName}\" expects the following args: {args}")
+        argsDict[arg] = nextToken
+
+    # perform string replacement on commandstring
+    for key in argsDict:
+        commandString = commandString.replace(key, argsDict[key])
+
+    nextCommands = [x.strip() for x in commandString.split(";") if len(x) != 0]
+    # print(f"NEXT COMMANDS: {nextCommands}")
+    return utils.buildCommandResponse(f"executing function \"{funcName}\".", nextCommands)
+
+    

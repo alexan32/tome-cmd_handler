@@ -32,9 +32,13 @@ roll list 2
 roll list 3
 roll list 4
 
+roll attackroll = 1d20 + (dex, str)kh1 + prof
+roll daggerdamage = 1d4 + (dex, str)kh1
+roll spellattack = 1d20 + cha + prof
+roll spellsave = 8 + cha + prof
+counter create first max=4 total=4
+counter create second max=3 total=3
+func create cast $slot | counter $slot -1; roll spellattack; roll spellsave;
 func create dagger | roll attackroll; roll daggerdamage;
+func cast first
 func dagger
-func list
-func search dagger
-func delete dagger
-func create cast $spellname $slot | article $spellname; counter $slot -1

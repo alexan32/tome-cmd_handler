@@ -210,3 +210,6 @@ def evaluateRollString(rollString:str, characterData:dict, depth:int=0, logging=
     # roll result, return values
     result = roll(rollString)
     return key, str(result.total), str(result)
+
+def buildCommandResponse(message:str, nextCommands:list=[]):
+    return message, nextCommands

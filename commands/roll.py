@@ -22,8 +22,9 @@ def rollList(tokens:list, characterData:dict):
     if len(tokens) > 0 and re.fullmatch(r"\d+", tokens[0]):
         index = int(tokens[0])
 
-    return utils.paginateDict(utils.buildCombinedRollDictionary(characterData), index)
-
+    return utils.buildCommandResponse(
+        utils.paginateDict(utils.buildCombinedRollDictionary(characterData), index)
+    )
 
 def rollSearch(tokens:list, characterData:dict):
     if len(tokens) == 0:
@@ -31,12 +32,12 @@ def rollSearch(tokens:list, characterData:dict):
 
     searchResults = utils.search(tokens[0], utils.rollKeys(characterData))
     if len(searchResults) == 0:
-        return f"No results found for {tokens[0]}"
+        return utils.buildCommandResponse(f"No results found for {tokens[0]}")
     else:
         message = f"Search results for \"{tokens[0]}\":\n"
         for key in searchResults:
             message = f"{key}".ljust(utils.SPACING, ".") + f"{utils.findRoll(key, characterData)}\n"
-        return message
+        return utils.buildCommandResponse(message)
 
 def rollDelete(tokens:list, characterData:dict):
     if len(tokens) == 0:
@@ -47,15 +48,15 @@ def rollDelete(tokens:list, characterData:dict):
         raise NotFoundException(key, "roll")
 
     del characterData["rolls"][key]
-    return f"successfully deleted roll \"{key}\""
+    return utils.buildCommandResponse(f"successfully deleted roll \"{key}\"")
 
 def rollSubject(subject:str, tokens:list, characterData:dict):
     
     if len(tokens) == 0:
         key, total, resultString = utils.evaluateRollString(subject, characterData)
         if not key:
-            return "", resultString
-        return key, resultString
+            return utils.buildCommandResponse(resultString)
+        return utils.buildCommandResponse(f"{key}: {resultString}")
     
     if tokens[0] == "=" and len(tokens) == 2:
         return rollCreate(subject, tokens[1], characterData)
@@ -70,8 +71,8 @@ def rollCreate(key, value, characterData):
         raise ReservewordException()
     
     if utils.rollAlreadyExists(key, characterData):
-        return f"The roll name \"{key}\" is already taken."
+        return utils.buildCommandResponse(f"The roll name \"{key}\" is already taken.")
     
     characterData["rolls"][key] = value
 
-    return f"Created roll \"{key}\" = {value}"
+    return utils.buildCommandResponse(f"Created roll \"{key}\" = {value}")

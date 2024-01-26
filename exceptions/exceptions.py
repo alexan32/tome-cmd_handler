@@ -26,7 +26,10 @@ class MissingArgumentException(CommandHandlerException):
     def __init__(self, expected):
         super().__init__(f"Command was missing an expected argument. {expected}")
 
-
 class ReservewordException(CommandHandlerException):
     def __init__(self, expected):
         super().__init__(f"The following are reserve words and cannot be used to name resources: {utils.RESERVE_WORDS}")
+
+class RecursiveDepthExceeded(CommandHandlerException):
+    def __init__(self, depth) -> None:
+        super().__init__(f"A recursive function hit the maximum depth permitted: {depth}")

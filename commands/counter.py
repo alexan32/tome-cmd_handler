@@ -38,7 +38,7 @@ def counterCreate(tokens: list, characterData: dict):
 
     characterData["counters"][counterName] = newCounter
 
-    return json.dumps(newCounter, indent=4)
+    return utils.buildCommandResponse(json.dumps(newCounter, indent=4))
 
 def counterList(tokens: list, characterData: dict):
     index = 0
@@ -46,8 +46,7 @@ def counterList(tokens: list, characterData: dict):
         index = int(tokens[0])
 
     transformerFunc = lambda key, dictionary: utils.counterToString(dictionary[key])
-
-    return utils.paginateDict(characterData["counters"], index, transformerFunc)
+    return utils.buildCommandResponse(utils.paginateDict(characterData["counters"], index, transformerFunc))
 
 def counterSearch(tokens: list, characterData: dict):
     if len(tokens) == 0:
@@ -55,12 +54,12 @@ def counterSearch(tokens: list, characterData: dict):
     
     searchResults = utils.search(tokens[0], list(characterData["counters"].keys()))
     if len(searchResults) == 0:
-        return f"No results found for {tokens[0]}"
+        return utils.buildCommandResponse(f"No results found for {tokens[0]}")
     else:
         message = f"Search results for \"{tokens[0]}\":\n"
         for x in searchResults:
             message += f"{x}\n"
-        return message
+        return utils.buildCommandResponse(message)
 
 def counterDelete(tokens: list, characterData: dict):
     if len(tokens) == 0:
@@ -69,7 +68,7 @@ def counterDelete(tokens: list, characterData: dict):
     counterName = tokens[0]
     if counterName in characterData["counters"]:
         del characterData["counters"][counterName]
-        return f"{counterName} successfully deleted."
+        return utils.buildCommandResponse(f"{counterName} successfully deleted.")
     else:
         raise NotFoundException(counterName, "counter")
 
@@ -80,17 +79,17 @@ def counterSubject(counterName: str, tokens: list, characterData: dict):
 
     # no operation, just show total/max
     if len(tokens) == 0:
-        return f"{counterName}: {counter['total']}/{counter['max']}" 
+        return utils.buildCommandResponse(f"{counterName}: {counter['total']}/{counter['max']}" )
 
     # max
     elif tokens[0] == "max":
         counter["total"] = counter["max"]
-        return f"{counterName}: {counter['total']}/{counter['max']}" 
+        return utils.buildCommandResponse(f"{counterName}: {counter['total']}/{counter['max']}" )
     
     # min
     elif tokens[0] == "min":
         counter["total"] = counter["min"]
-        return f"{counterName}: {counter['total']}/{counter['max']}" 
+        return utils.buildCommandResponse(f"{counterName}: {counter['total']}/{counter['max']}")
 
     # increment operation
     elif re.fullmatch(utils.INCREMENT, tokens[0]):
@@ -98,13 +97,13 @@ def counterSubject(counterName: str, tokens: list, characterData: dict):
             raise InvalidArgumentException(tokens[1], f"Cannot have additional arguments ({tokens[1]}) after an increment argument ({tokens[0]})")
 
         incrementCounter(counter, tokens[0])
-        return f"{counterName}: {counter['total']}/{counter['max']}" 
+        return utils.buildCommandResponse(f"{counterName}: {counter['total']}/{counter['max']}")
 
     # modify operation
     elif re.fullmatch(utils.COUNTER_SET, tokens[0]):
         setValues(tokens, counter)
         characterData["counters"][counterName] = counter
-        return json.dumps(counter, indent=4)
+        return utils.buildCommandResponse(json.dumps(counter, indent=4))
     
     else:
         raise InvalidArgumentException(tokens[0], f"Expected an increment (+1, -12, etc) or a set argument (max=100). Received {tokens[0]}")

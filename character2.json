@@ -3,7 +3,7 @@
     "participant": "UUID",
     "meta": {},
     "functions": {
-        "longrest": "counter hp max; counter temphp min;"
+        "longrest": "|counter hp max; counter temphp min;"
     },
     "articles": {},
     "counters": {               

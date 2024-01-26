@@ -6,7 +6,7 @@ from commands.counter import counter
 from commands.composite import composite
 from commands.roll import roll
 from commands.function import function
-from exceptions.exceptions import InvalidCommandException
+from exceptions.exceptions import InvalidCommandException, RecursiveDepthExceeded
 
 class TokenSimplifier(Transformer):
 
@@ -41,18 +41,37 @@ COMMAND_FUNCTIONS = {
     "counter": counter,
     "composite": composite,
     "roll": roll,
-    "article": None,  # TODO: Add article cmd
-    "func": function,  # TODO: Add func cmd
-    "function": function  # TODO: Add function cmd
+    # "article": None,  # TODO: Add article cmd
+    "func": function,
+    "function": function
 }
 
-def execute(tokens: list, characterData: dict):
+MAXIMUM_DEPTH = 5
+
+def execute(commandPhrase:str, characterData: dict, depth:int=0):
     
+    messages = []
+
+    _, tokens = PARSER.parse(commandPhrase)
     command = tokens.pop(0)
     cmd_function = COMMAND_FUNCTIONS.get(command)
 
     if cmd_function:
-        return cmd_function(tokens, characterData)
+        output = cmd_function(tokens, characterData)
+        # print(f"MESSAGE: \n{output[0]}")
+        messages.append(output[0])
+        
+        # function commands may return a list of other commands to execute
+        for _commandPhrase in output[1]:
+
+            # check for maximum depth
+            if depth > MAXIMUM_DEPTH:
+                raise RecursiveDepthExceeded(MAXIMUM_DEPTH)
+
+            # collect message results from execution
+            newMessages = execute(_commandPhrase, characterData, depth+1)
+            messages.extend(newMessages)
+        return messages
     else:
         raise InvalidCommandException(command)
 
@@ -62,22 +81,16 @@ if __name__ == "__main__":
     with open("./input.txt") as f:
         commands = [x.strip() for x in f.readlines() if len(x.strip()) != 0]
 
-    with open("./character-min.json") as f:
+    with open("./character2.json") as f:
         characterData = json.load(f)
 
     for command in commands:
         print(f"INPUT: {command}")
-        try:
-            tree, tokens = PARSER.parse(command)
-        except Exception as e:
-            print("Failed to parse input. Use !help for a list of valid commands.")
-        else:
-            print(f"TOKENS: {tokens}")
-            # print(tree.pretty())
-            result = execute(tokens, characterData)
-            print(f"RESPONSE:\n{result}")
-
+        results = execute(command, characterData)
+        print(f"OUTPUT:")
+        for x in results:
+            print(x)
         print("=" * 30)
 
     print("DONE!")
-    print(json.dumps(characterData, indent=4))
+    # print(json.dumps(characterData, indent=4))
