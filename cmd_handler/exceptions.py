@@ -1,4 +1,4 @@
-from commands import utils
+from . import utils
 
 class CommandHandlerException(Exception):
     """Parent exception for custom command handler exceptions."""

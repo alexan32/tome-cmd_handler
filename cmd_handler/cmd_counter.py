@@ -1,7 +1,7 @@
 import re
 import json
-from commands.exceptions import *
-import commands.utils as utils
+from .exceptions import *
+from . import utils
 
 
 def counter(tokens: list, characterData: dict):

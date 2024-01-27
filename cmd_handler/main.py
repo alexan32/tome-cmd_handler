@@ -1,12 +1,11 @@
-import json
+import os
 from lark import Lark, Token, Transformer
 from lark.exceptions import UnexpectedInput
-
-from commands.counter import counter
-from commands.composite import composite
-from commands.roll import roll
-from commands.function import function
-from commands.exceptions import CommandHandlerException, InvalidCommandException, RecursiveDepthExceeded
+from .cmd_counter import counter
+from .cmd_composite import composite
+from .cmd_roll import roll
+from .cmd_function import function
+from .exceptions import CommandHandlerException, InvalidCommandException, RecursiveDepthExceeded
 
 class TokenSimplifier(Transformer):
 
@@ -32,7 +31,7 @@ class CommandParser:
 
         return tree, tokens
 
-with open("./commands.lark") as f:
+with open(os.path.join(os.path.dirname(__file__), "commands.lark")) as f:
     grammar = f.read()
 
 PARSER = CommandParser(grammar, "command_phrase")
@@ -48,7 +47,7 @@ COMMAND_FUNCTIONS = {
 
 MAXIMUM_DEPTH = 5
 
-def execute(commandPhrase:str, characterData: dict, depth:int=0):
+def execute_command(commandPhrase:str, characterData: dict, depth:int=0):
     
     messages = []
 
@@ -70,7 +69,7 @@ def execute(commandPhrase:str, characterData: dict, depth:int=0):
                     raise RecursiveDepthExceeded(MAXIMUM_DEPTH)
 
                 # collect message results from execution
-                newMessages = execute(_commandPhrase, characterData, depth+1)
+                newMessages = execute_command(_commandPhrase, characterData, depth+1)
                 messages.extend(newMessages)
             return messages
         else:
@@ -81,20 +80,3 @@ def execute(commandPhrase:str, characterData: dict, depth:int=0):
 
     except UnexpectedInput as e:
         return ["Command syntax was not recognized. Review the help menu for assistance."]
-
-if __name__ == "__main__":
-
-    with open("./input.txt") as f:
-        commands = [x.strip() for x in f.readlines() if len(x.strip()) != 0]
-
-    with open("./character2.json") as f:
-        characterData = json.load(f)
-
-    for command in commands:
-        print(f"INPUT: {command}")
-        results = execute(command, characterData)
-        print(f"OUTPUT:")
-        for x in results:
-            print(x)
-        print("=" * 30)
-    print(json.dumps(characterData, indent=4))
