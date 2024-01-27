@@ -1,0 +1,63 @@
+// RULES
+command_phrase: counter_rule | composite_rule | roll_rule  | article_rule | function_rule
+
+// COMMAND RULES
+counter_rule: COUNTER_CMD _WS (subject_rule | list_rule | create_rule | delete_rule | search_rule)
+composite_rule: COMPOSITE_CMD _WS (subject_rule | list_rule | create_rule | delete_rule | search_rule | remove_rule)
+roll_rule: ROLL_CMD _WS (delete_rule | list_rule | search_rule | roll_op_rule)
+article_rule: ARTICLE_CMD _WS (VALUE_ARG | list_rule | search_rule)
+function_rule: FUNC_CMD _WS (subject_rule | list_rule | search_rule | delete_rule | create_func_rule)
+COMPOSITE_CMD: "composite"
+COUNTER_CMD: "counter"
+ROLL_CMD: "roll"
+ARTICLE_CMD: "article"
+FUNC_CMD: "func" | "function"
+
+//OPERATION RULES
+// 'list' or 'list 2'
+list_rule: LIST_OP _WS? number_argument?
+LIST_OP: "list"
+
+// 'create hp max=10 min=3'
+create_rule: CREATE_OP _WS VALUE_ARG _WS? set_argument*
+// 'create cast $spell $level | article $spell; counter $level -1;'
+create_func_rule: CREATE_OP _WS VALUE_ARG _WS? (VARIABLE_ARG _WS?)* FUNC_SEPARATOR _WS? (function_allowed_commands _WS? COMMAND_END _WS?)*
+CREATE_OP: "create"
+FUNC_SEPARATOR: "|"
+COMMAND_END: ";"
+
+function_allowed_commands: counter_rule | roll_rule  | article_rule
+
+// 'delete hp'
+delete_rule: DELETE_OP _WS VALUE_ARG
+DELETE_OP: "delete"
+
+// 'search hp'
+search_rule: SEARCH_OP _WS VALUE_ARG
+SEARCH_OP: "search"
+
+// 'hp +1' or 'hp max=100' or 'hp' or 'cast fireball third' 'acrobatics'
+subject_rule: VALUE_ARG _WS? ( value_argument* | set_argument* | increment_argument )?
+
+// 'acrobatics' or 'acrobatics = 1d20 + prof + dex' or '1d20 + prof + dex'
+roll_op_rule: VALUE_ARG | VALUE_ARG _WS? EQ _WS? ALL_REMAINING_INPUT | ALL_REMAINING_INPUT
+
+// 'composite acrobatics remove base'
+remove_rule: REMOVE_OP (_WS VALUE_ARG)* _WS?
+REMOVE_OP: "remove"
+
+// ARGUMENT RULES
+value_argument: VALUE_ARG _WS?
+increment_argument: INCREMENT_ARG _WS?
+set_argument: VALUE_ARG _WS? EQ _WS? GENERIC_ARG _WS?
+number_argument: WHOLE_NUMBER?
+
+// TERMINALS
+EQ: "="
+ALL_REMAINING_INPUT: /.+/
+GENERIC_ARG: /[\$a-z0-9\+\-\(\),\/%*_]+/
+INCREMENT_ARG: /[\+\-][0-9]+/
+VALUE_ARG: /\$?[a-z0-9_]+/
+VARIABLE_ARG: /\$[a-z0-9_]+/
+WHOLE_NUMBER: /[0-9]+/
+_WS: /[\s\t\f\r\n]/+

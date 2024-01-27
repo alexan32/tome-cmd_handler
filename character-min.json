@@ -1,0 +1,11 @@
+{
+    "characterId": "UUID",
+    "participant": "UUID",
+    "meta": {},
+    "functions": {},
+    "articles": {},
+    "counters": {},
+    "rolls": {},
+    "composites": {},
+    "saveFlag": false
+}

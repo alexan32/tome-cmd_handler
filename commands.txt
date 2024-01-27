@@ -1,0 +1,48 @@
+counter create epsilon max=100 total=100
+counter list
+counter search epsilon
+counter epsilon max=30 total=0
+counter epsilon +10
+counter epsilon
+counter epsilon max
+counter epsilon min
+counter delete epsilon
+
+composite create painters_tools base=1d20 modifier=dex proficiency=prof bonus=0
+composite create theives_tools base=1d20 modifier=dex proficiency=expert bonus=0
+composite list
+composite list 2
+composite list 3
+composite search painters_tools
+composite painters_tools proficiency=0
+composite painters_tools remove bonus
+composite painters_tools
+composite delete theives_tools
+
+roll painters_tools
+roll 1d20 + (2, 1d4)kh1
+roll spark = 4d4kh3 + 1
+roll spark
+roll search painters_tools
+roll intimidation
+roll proficient
+roll level
+roll list
+roll list 2
+roll list 3
+roll list 4
+
+roll attackroll = 1d20 + (dex, str)kh1 + prof
+roll daggerdamage = 1d4 + (dex, str)kh1
+roll spellattack = 1d20 + cha + prof
+roll spellsave = 8 + cha + prof
+counter create first max=4 total=4
+counter create second max=3 total=3
+func create cast $slot | counter $slot -1; roll spellattack; roll spellsave;
+func create dagger | roll attackroll; roll daggerdamage;
+func cast first
+func dagger
+
+function list
+function list 2
+function search dagger
