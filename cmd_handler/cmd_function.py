@@ -41,7 +41,7 @@ def functionCreate(tokens:list, characterData:dict):
     saveString = (" ".join(args) + " |" + statements).strip()
 
     characterData["functions"][funcName] = saveString
-
+    utils.setUpdateFlag(characterData)
     return utils.buildCommandResponse(f"Created function \"{funcName}\"")
 
 def functionList(tokens:list, characterData:dict):
@@ -72,6 +72,7 @@ def functionDelete(tokens:list, characterData:dict):
     functionName = tokens[0]
     if functionName in characterData["functions"]:
         del characterData["functions"][functionName]
+        utils.setUpdateFlag(characterData)
         return utils.buildCommandResponse(f"{functionName} successfully deleted.")
     else:
         raise NotFoundException(functionName, "functions")

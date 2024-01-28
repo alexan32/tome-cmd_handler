@@ -1,5 +1,5 @@
 from difflib import SequenceMatcher
-from d20 import roll
+import d20
 import re
 
 # Regex
@@ -36,6 +36,8 @@ RESERVE_WORDS =  [*OPERATION_WORDS, *COMMAND_WORDS]
 # Other
 MAX_DEPTH = 10
 
+def setUpdateFlag(characterData:dict):
+    characterData["UPDATE"] = True
 
 def rollKeys(characterData:dict):
     return [
@@ -162,6 +164,13 @@ def paginateList(data: list, index: int):
     return header + "\n" + pages[index]
 
 
+class RollStringifer(d20.SimpleStringifier):
+
+    def _str_expression(self, node):
+        return f"{self._stringify(node.roll)} = {int(node.total)}"
+
+customStringifier = RollStringifer()
+
 # returns a set containing the following:
 # key - either string or None. returns the string if the input matches a saved value in the characterData data, otherwise None
 # total - string representing the total of the dice roll
@@ -208,7 +217,7 @@ def evaluateRollString(rollString:str, characterData:dict, depth:int=0, logging=
         raise Exception(f"Failed to perform variable replacement for the following: {misses}")
     
     # roll result, return values
-    result = roll(rollString)
+    result = d20.roll(rollString, stringifier=customStringifier)
     return key, str(result.total), str(result)
 
 def buildCommandResponse(message:str, nextCommands:list=[]):

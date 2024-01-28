@@ -37,8 +37,8 @@ def counterCreate(tokens: list, characterData: dict):
         newCounter[key] = value
 
     characterData["counters"][counterName] = newCounter
-
-    return utils.buildCommandResponse(json.dumps(newCounter, indent=4))
+    utils.setUpdateFlag(characterData)
+    return utils.buildCommandResponse("created counter \"counterName\": " + json.dumps(newCounter, indent=4))
 
 def counterList(tokens: list, characterData: dict):
     index = 0
@@ -68,6 +68,7 @@ def counterDelete(tokens: list, characterData: dict):
     counterName = tokens[0]
     if counterName in characterData["counters"]:
         del characterData["counters"][counterName]
+        utils.setUpdateFlag(characterData)
         return utils.buildCommandResponse(f"{counterName} successfully deleted.")
     else:
         raise NotFoundException(counterName, "counter")
@@ -84,11 +85,13 @@ def counterSubject(counterName: str, tokens: list, characterData: dict):
     # max
     elif tokens[0] == "max":
         counter["total"] = counter["max"]
+        utils.setUpdateFlag(characterData)
         return utils.buildCommandResponse(f"{counterName}: {counter['total']}/{counter['max']}" )
     
     # min
     elif tokens[0] == "min":
         counter["total"] = counter["min"]
+        utils.setUpdateFlag(characterData)
         return utils.buildCommandResponse(f"{counterName}: {counter['total']}/{counter['max']}")
 
     # increment operation
@@ -97,16 +100,18 @@ def counterSubject(counterName: str, tokens: list, characterData: dict):
             raise InvalidArgumentException(tokens[1], f"Cannot have additional arguments ({tokens[1]}) after an increment argument ({tokens[0]})")
 
         incrementCounter(counter, tokens[0])
+        utils.setUpdateFlag(characterData)
         return utils.buildCommandResponse(f"{counterName}: {counter['total']}/{counter['max']}")
 
     # modify operation
     elif re.fullmatch(utils.COUNTER_SET, tokens[0]):
         setValues(tokens, counter)
         characterData["counters"][counterName] = counter
-        return utils.buildCommandResponse(json.dumps(counter, indent=4))
+        utils.setUpdateFlag(characterData)
+        return utils.buildCommandResponse(f"updated counter \"{counterName}\": " + json.dumps(counter, indent=4))
     
     else:
-        raise InvalidArgumentException(tokens[0], f"Expected an increment (+1, -12, etc) or a set argument (max=100). Received {tokens[0]}")
+        raise InvalidArgumentException(tokens[0], f"Expected an increment (+1, -12, etc) or a set argument (max=100).")
 
 def setValues(tokens, counter):
 

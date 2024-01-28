@@ -48,6 +48,7 @@ def rollDelete(tokens:list, characterData:dict):
         raise NotFoundException(key, "roll")
 
     del characterData["rolls"][key]
+    utils.setUpdateFlag(characterData)
     return utils.buildCommandResponse(f"successfully deleted roll \"{key}\"")
 
 def rollSubject(subject:str, tokens:list, characterData:dict):
@@ -74,5 +75,5 @@ def rollCreate(key, value, characterData):
         return utils.buildCommandResponse(f"The roll name \"{key}\" is already taken.")
     
     characterData["rolls"][key] = value
-
+    utils.setUpdateFlag(characterData)
     return utils.buildCommandResponse(f"Created roll \"{key}\" = {value}")

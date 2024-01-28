@@ -30,12 +30,12 @@ def compositeCreate(tokens: list, characterData: dict):
     setValues(tokens, newComposite)
 
     characterData["composites"][compositeName] = newComposite
-
+    utils.setUpdateFlag(characterData)
     return utils.buildCommandResponse(f"created {compositeName}: " + json.dumps(newComposite, indent=4))
 
 def compositeTransformer(key:str, composites:dict):
     target = composites[key]
-    return utils.buildCommandResponse(utils.compositeToString(target))
+    return utils.compositeToString(target)
 
 def compositeList(tokens: list, characterData: dict):
     index = 0
@@ -67,7 +67,8 @@ def compositeDelete(tokens: list, characterData: dict):
     compositeName = tokens[0]
     if compositeName in characterData["composites"]:
         del characterData["composites"][compositeName]
-        return utils.buildCommandResponse(f"{compositeName} successfully deleted.")
+        utils.setUpdateFlag(characterData)
+        return utils.buildCommandResponse(f"composite \"{compositeName}\" successfully deleted.")
     else:
         raise NotFoundException(compositeName, "composite")
 
@@ -78,18 +79,19 @@ def compositeSubject(compositeName: str, tokens: list, characterData: dict):
 
     # no operation, just display composite
     if len(tokens) == 0:
-        return utils.buildCommandResponse(f"composite {compositeName}: " + json.dumps(composite, indent=4)) 
+        return utils.buildCommandResponse(f"composite \"{compositeName}\": " + json.dumps(composite, indent=4)) 
     
     # remove operation
     elif tokens[0] == "remove":
+        utils.setUpdateFlag(characterData)
         return compositeRemove(compositeName, composite, tokens[1:])
 
     # modify operation
     elif re.fullmatch(utils.COMPOSITE_SET, tokens[0]):
         setValues(tokens, composite)
         characterData["composites"][compositeName] = composite
-        return utils.buildCommandResponse(json.dumps(composite, indent=4))
-    
+        utils.setUpdateFlag(characterData)
+        return utils.buildCommandResponse(f"updated \"{compositeName}\": " + json.dumps(composite, indent=4))
     else:
         raise InvalidArgumentException(tokens[0], f"Expected an increment (+1, -12, etc) or a set argument (max=100). Received {tokens[0]}")
 
@@ -100,7 +102,7 @@ def compositeRemove(compositeName: str, composite: dict, tokens: list):
     else:
         raise NotFoundException(key, "composite")
     
-    return utils.buildCommandResponse(f"updated {compositeName}: " + json.dumps(composite, indent=4))
+    return utils.buildCommandResponse(f"removed \"{key}\" from \"{compositeName}\": " + json.dumps(composite, indent=4))
 
 def setValues(tokens: list, composite: dict):
     for token in tokens:
@@ -108,3 +110,6 @@ def setValues(tokens: list, composite: dict):
             raise InvalidArgumentException(token, "Expected something like \"base=1d20\", \"proficiency=expert\", or \"bonus=2\"")
         key, value = token.split("=")
         composite[key] = value
+
+# updateMessage = lambda compositeName, _composite : f"updated \"{compositeName}\": " + json.dumps(_composite, indent=4)
+# removeKeyMessage = lambda compositeName, _composite, key : f"removed \"{key}\" from \"{compositeName}\": " + json.dumps(_composite, indent=4)
