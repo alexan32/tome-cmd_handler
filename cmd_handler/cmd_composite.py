@@ -31,7 +31,7 @@ def compositeCreate(tokens: list, characterData: dict):
 
     characterData["composites"][compositeName] = newComposite
     utils.setUpdateFlag(characterData)
-    return utils.buildCommandResponse(f"created {compositeName}: " + json.dumps(newComposite, indent=4))
+    return utils.buildCommandResponse(f"created composite \"{compositeName}\": " + json.dumps(newComposite, indent=4))
 
 def compositeTransformer(key:str, composites:dict):
     target = composites[key]

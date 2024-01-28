@@ -38,7 +38,7 @@ def counterCreate(tokens: list, characterData: dict):
 
     characterData["counters"][counterName] = newCounter
     utils.setUpdateFlag(characterData)
-    return utils.buildCommandResponse("created counter \"counterName\": " + json.dumps(newCounter, indent=4))
+    return utils.buildCommandResponse(f"created counter \"{counterName}\": " + json.dumps(newCounter, indent=4))
 
 def counterList(tokens: list, characterData: dict):
     index = 0
